@@ -6,7 +6,7 @@ An interactive bilingual (Traditional Chinese / English) knowledge graph for stu
 
 | Feature | Description |
 |---------|-------------|
-| 🕸️ Force graph | 139 nodes, 112 links across 7 types — drag, zoom, explore |
+| 🕸️ Force graph | 139 nodes, 208 links across 7 types — drag, zoom, explore |
 | 🔗 Relationships | 112 links — causal, chronological, institutional, created-by |
 | 📋 Click panels | Click any node for facts table + linked nodes |
 | 📝 Quiz mode | Every node has a built-in quiz question with reveal |
