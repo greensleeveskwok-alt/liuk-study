@@ -767,13 +767,20 @@ function buildGraph(){
   const deg={};vis.forEach(n=>deg[n.id]=0);
   const visL=L.filter(l=>visIds.has(l.s)&&visIds.has(l.t));
   visL.forEach(l=>{deg[l.s]=(deg[l.s]||0)+1;deg[l.t]=(deg[l.t]||0)+1;});
-  const nodes=vis.map(d=>({...d}));
+  const nodes=vis.map(d=>({...d,
+    x: W/2 + (Math.random()-0.5)*200,
+    y: H/2 + (Math.random()-0.5)*200
+  }));
   const links=visL.map(d=>({source:d.s,target:d.t,rel:d.r}));
   simulation=d3.forceSimulation(nodes)
-    .force('link',d3.forceLink(links).id(d=>d.id).distance(65).strength(0.3))
-    .force('charge',d3.forceManyBody().strength(-180))
-    .force('center',d3.forceCenter(W/2,H/2))
-    .force('collision',d3.forceCollide().radius(d=>nodeR(d,deg)+10));
+    .force('link',d3.forceLink(links).id(d=>d.id).distance(55).strength(0.6))
+    .force('charge',d3.forceManyBody().strength(-120).distanceMax(400))
+    .force('center',d3.forceCenter(W/2,H/2).strength(0.08))
+    .force('x',d3.forceX(W/2).strength(0.04))
+    .force('y',d3.forceY(H/2).strength(0.04))
+    .force('collision',d3.forceCollide().radius(d=>nodeR(d,deg)+8))
+    .velocityDecay(0.35)
+    .alphaDecay(0.015);
   linkSel=g.append('g').selectAll('line').data(links).join('line')
     .attr('stroke',d=>RC[d.rel]||'#6e7681').attr('stroke-width',1.1)
     .attr('stroke-opacity',0.45).attr('marker-end',d=>`url(#arr-${d.rel})`);
@@ -813,8 +820,12 @@ function applyTimeline(){
 function restoreGraph(){
   if(!simulation)return;
   const C=document.getElementById('graph-container');
-  simulation.force('x',null).force('y',null)
-    .force('center',d3.forceCenter(C.clientWidth/2,C.clientHeight/2)).alpha(0.5).restart();
+  const W=C.clientWidth,H=C.clientHeight;
+  simulation
+    .force('x',d3.forceX(W/2).strength(0.04))
+    .force('y',d3.forceY(H/2).strength(0.04))
+    .force('center',d3.forceCenter(W/2,H/2).strength(0.08))
+    .alpha(0.5).restart();
 }
 
 // ─── PANEL ─────────────────────────────────────────────────
